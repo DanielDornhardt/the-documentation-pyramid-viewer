@@ -155,6 +155,8 @@ Run the tests with `node --test tests/*.test.js` (list the files: a plain `node 
 
 **Refreshing the vendored markdown-it.** markdown-it has published denial-of-service advisories (all fixed in 15.0.3 or later). The pinned version is 15.0.3. When a new one appears: replace `vendor/markdown-it.esm.min.mjs` with the fixed ESM minified bundle, update the version, size and sha256 in `vendor/NOTICE.md`, check that the bundled licences are still listed, and run the tests (`tests/vendor.test.js` fails if the file changed without a matching note).
 
-## Licence
+## Licence and credits
 
-No licence has been chosen yet. Until one is added to this repository, no licence is granted.
+MIT, see [LICENSE](LICENSE). The vendored markdown-it keeps its own licence in `vendor/NOTICE.md`.
+
+If you use the viewer or the [documentation pyramid](https://github.com/DanielDornhardt/the-documentation-pyramid) in your own project, your own docs, an article or your own shopfront material, please link back to the original repository. This is a request, not a condition of the licence. A line like this is plenty: "Built with the Documentation Pyramid (https://github.com/DanielDornhardt/the-documentation-pyramid)".
