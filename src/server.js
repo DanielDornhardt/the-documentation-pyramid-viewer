@@ -6,7 +6,7 @@
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { join, relative, resolve, isAbsolute } from 'node:path';
+import { join, relative, resolve, isAbsolute, sep } from 'node:path';
 import { loadPyramid, readDocumentText, resolveRequestPath, LayerConfigError } from '../viewer.js';
 import { renderOverviewPage, renderDocumentPage, renderDocumentFragment } from './pages.js';
 import { NO_LAYERS_MESSAGE, notOnPyramidLine, folderIndexLines } from './export.js';
@@ -54,9 +54,9 @@ const SECURITY_HEADERS = {
  */
 
 /** Whether the file lies inside the folder (so a watcher on the folder already sees it). */
-function isInside(folder, file) {
+export function isInside(folder, file) {
   const rel = relative(resolve(folder), resolve(file));
-  return rel !== '' && !rel.startsWith('..') && !isAbsolute(rel);
+  return rel !== '' && rel !== '..' && !rel.startsWith('..' + sep) && !isAbsolute(rel);
 }
 
 const LOOPBACK = new Set(['127.0.0.1', 'localhost', '::1']);

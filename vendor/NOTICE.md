@@ -23,6 +23,8 @@ The test `tests/vendor.test.js` computes the sha256 of the vendored file and fai
 
 The bundle is self-contained and includes code from the packages below. Licence texts were downloaded on 2026-10-21 from the published `LICENSE` files of each package through the jsdelivr npm mirror and are reproduced here unchanged.
 
+The bundle also inlines a few small helper functions from `@oxc-project/runtime` (MIT), added by the bundler. They are not listed as a package below.
+
 Unverified: the exact versions of the dependencies inside the bundle were not extracted from the bundle. The versions named below are those that the `markdown-it@15.0.3` package.json declares as dependency ranges and that the mirror served on the download date. The licence type of each package is as declared in its package.json. The test of the licence text against the bundled code itself was not done.
 
 ### markdown-it 15.0.3

@@ -1,6 +1,6 @@
 # Vendored fonts
 
-IBM Plex Sans and IBM Plex Mono, used by the metal skin. The files are the official, unmodified `complete/woff2` files of the published npm packages. They are not subset, converted or renamed (the font name "Plex" is a Reserved Font Name under the licence). The viewer embeds them in the HTML export (base64 in `skins/metal-fonts.css`) and serves them in serve mode from `/assets/fonts/`.
+IBM Plex Sans and IBM Plex Mono, used by the metal skin. The files are the official, unmodified `complete/woff2` files of the published npm packages. They are not subset, converted or renamed (the font name "Plex" is a Reserved Font Name under the licence). The viewer embeds them in the HTML export (base64 in a stylesheet that is generated at export time) and serves them in serve mode from `/assets/fonts/`.
 
 Licence: SIL Open Font License 1.1, Copyright (c) 2017 IBM Corp. with Reserved Font Name "Plex". The full text is in `OFL.txt` next to the fonts and is the licence file of both packages (the two copies are identical).
 

@@ -13,6 +13,6 @@ A small, dependency-free viewer for documentation pyramids (layered markdown doc
 
 ## Where things are
 
-* `viewer.js`: pure functions and the entry point. `src/`: server, pages, export, markdown export, command line, watcher, Node version guard. `assets/`: the dialog script and the live-update script. `skins/`: the base stylesheet and the two themes.
-* `tools/refresh-pyramid.js` and `tools/refresh-pyramid.md`: the routing-table tool that ships with the documentation pyramid (see its reference for the findings and modes).
+* `viewer.js`: pure functions and the entry point. `src/`: server, pages, export, markdown export, command line, watcher, skin loading, bundled fonts, safe file writing, Node version guard. `assets/`: the dialog script and the live-update script. `skins/`: the base stylesheet and the two themes.
+* `tools/demo-grow.js`: grows a pyramid in a watched folder for screen recordings. `tools/refresh-pyramid.js` and `tools/refresh-pyramid.md`: the routing-table tool that ships with the documentation pyramid (see its reference for the findings and modes).
 * `vendor/`: the pinned markdown-it bundle with its notice and checksum.

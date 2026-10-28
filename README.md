@@ -29,10 +29,13 @@ No dependencies to install, no build step. One vendored library file (markdown-i
 
 ## Quick start
 
+> [!NOTE] Adaptation
+> You can and should adapt this to your own codebase!
+
 You need Node 20.11 or newer.
 
 ```
-git clone git@github.com:DanielDornhardt/the-documentation-pyramid-viewer.git
+git clone https://github.com/DanielDornhardt/the-documentation-pyramid-viewer.git
 cd the-documentation-pyramid-viewer
 node viewer.js serve <docs-folder>
 ```
@@ -147,7 +150,7 @@ The token names and their defaults are in the two theme files; only the tokens a
 
 ## Security notes
 
-Serve mode listens on 127.0.0.1, answers only GET and HEAD, rejects requests whose Host header is not its own address (use `--allow-host` when you reach it by name), resolves every path with `realpath` and keeps it inside the docs folder. Raw HTML in markdown is escaped, on purpose. Responses carry a Content-Security-Policy without inline script. Files over 2 MB are not read. Export refuses to write through a symbolic link at a target path.
+Serve mode listens on 127.0.0.1 by default, answers only GET and HEAD, rejects requests whose Host header is not its own address (use `--allow-host` when you reach it by name), resolves every path with `realpath` and keeps it inside the docs folder. Raw HTML in markdown is escaped, on purpose. Responses carry a Content-Security-Policy without inline script. Files over 2 MB are not read. Export refuses to write through a symbolic link at a target path. If you bind to every interface (`--host 0.0.0.0` or `::`) without `--allow-host`, the Host check is switched off and the server prints only a warning, so do that only on a network you trust.
 
 ## What was checked, and what was not
 
@@ -166,7 +169,7 @@ Serve mode listens on 127.0.0.1, answers only GET and HEAD, rejects requests who
 
 ## Development
 
-Run the tests with `node --test tests/*.test.js` (list the files: a plain `node --test` also picks up test files in stray copies of the repository inside the folder). `node tools/measure.js` measures request times on a generated tree and is not part of the test run. The code is `viewer.js` (pure functions and the entry point), a few modules in `src/` (server, pages, export, command line, watcher, Node version guard) and two browser scripts in `assets/`.
+Run the tests with `node --test tests/*.test.js` (list the files: a plain `node --test` also picks up test files in stray copies of the repository inside the folder). `node tools/measure.js` measures request times on a generated tree and is not part of the test run. The code is `viewer.js` (pure functions and the entry point), a few modules in `src/` (server, pages, export, command line, watcher, skins, fonts, safe file writing, Node version guard) and two browser scripts in `assets/`.
 
 `tools/refresh-pyramid.js` keeps the routing table of a pyramid's root `index.md` current and checks the docs against the house rules; a copy ships with the [documentation pyramid](https://github.com/DanielDornhardt/the-documentation-pyramid). Its reference is `tools/refresh-pyramid.md`.
 
