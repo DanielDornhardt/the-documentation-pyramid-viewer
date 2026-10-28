@@ -23,7 +23,9 @@ The documentation pyramids behind them are in the [`samples/`](https://github.co
 
 No dependencies to install, no build step. One vendored library file (markdown-it) is the only third-party code.
 
-<img src="docs/screenshots/pyramid-grows.gif" alt="A pyramid growing in the viewer while docs are written: watch mode, metal skin" height="250"> <img src="docs/screenshots/pyramid-light.png" alt="The pyramid view, light skin" height="250">
+<img src="docs/screenshots/pyramid-grows.gif" alt="A pyramid growing in the viewer while docs are written: watch mode, metal skin" width="800">
+
+![The pyramid view, light skin](docs/screenshots/pyramid-light.png)
 
 ## Quick start
 
