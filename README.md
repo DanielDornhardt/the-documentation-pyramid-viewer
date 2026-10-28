@@ -2,17 +2,28 @@
 
 **See your documentation pyramid grow, brick by brick.**
 
-A small viewer for documentation pyramids: layered markdown docs (vision, architecture, modules, operations, decisions). It shows the pyramid as a picture, shows the same documents as a classic tree browser, renders each document, and exports static HTML or one big Markdown file.
+A small viewer for [Documentation Pyramids](https://github.com/DanielDornhardt/the-documentation-pyramid) : layered markdown docs (vision, architecture, modules, operations, decisions). For the story behind it and why it works, read the article: [The Documentation Pyramid](https://dornhardt.com/writing/the-documentation-pyramid).
 
-Made for the [Documentation Pyramid](https://github.com/DanielDornhardt/the-documentation-pyramid), the layered docs format for humans and coding agents. Start there if you want to know what a pyramid is and how to set one up for your project. For the story behind it and why it works, read the article: [The Documentation Pyramid](https://dornhardt.com/writing/the-documentation-pyramid).
+This can visualize and render a Documentation Pyramid in multiple ways:
 
-**Live demos:** see it on two real code bases, with a skin switcher: [NetHack](https://dornhardt.com/pyramid/nethack/) and [Lua](https://dornhardt.com/pyramid/lua/). The documentation pyramids behind them are in the [`samples/`](https://github.com/DanielDornhardt/the-documentation-pyramid/tree/main/samples) folder of the pyramid repository.
+- A dynamic HTML view containing 
+  - a browseable pyramid-view of the layers
+  - A browseable classic / tree-style - view
+- A static export of the two HTML styles above
+- An export of the markdown contents as one big markdown file
+
+We ship two different skins for the HTML view, a light and a metal skin because 🤘METAL🤘 i mean because that's our house style of course :D
+
+**Live demos:** see it on two real code bases, with a skin switcher: 
+
+- [NetHack](https://dornhardt.com/pyramid/nethack/) and 
+- [Lua](https://dornhardt.com/pyramid/lua/)
+
+The documentation pyramids behind them are in the [`samples/`](https://github.com/DanielDornhardt/the-documentation-pyramid/tree/main/samples) folder of the pyramid repository.
 
 No dependencies to install, no build step. One vendored library file (markdown-it) is the only third-party code.
 
-![A pyramid growing in the viewer while docs are written: watch mode, metal skin](docs/screenshots/pyramid-grows.gif)
-
-![The pyramid view, light skin](docs/screenshots/pyramid-light.png)
+<img src="docs/screenshots/pyramid-grows.gif" alt="A pyramid growing in the viewer while docs are written: watch mode, metal skin" height="250"> <img src="docs/screenshots/pyramid-light.png" alt="The pyramid view, light skin" height="250">
 
 ## Quick start
 
