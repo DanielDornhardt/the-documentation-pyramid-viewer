@@ -5,7 +5,7 @@ A small, dependency-free viewer for documentation pyramids (layered markdown doc
 ## Rules
 
 * Node ES module (entry `viewer.js`, helpers in `src/`), no npm dependencies, no framework, no build step. One vendored markdown library file is the only third-party code. Tests use `node --test tests/*.test.js`; `tools/measure.js` is the performance script and is not part of the test run.
-* Plain professional language, no emojis, in every file.
+* Professional language with a little fun, and no emojis in any file, except the sign of the horns (U+1F918) that the owner uses in the README.
 * Fixtures contain invented text only. No private business details, no local absolute paths in tracked files.
 * Write code and CSS fresh from the described behaviour; do not copy code from other projects. The owner's own earlier viewers are the one exception for looks: their colours, spacing and animation values may be ported into our tokens and CSS. No image files or font files in the repository except the screenshots in `docs/screenshots/` and the official IBM Plex fonts in `vendor/fonts/` (unmodified, with their licence and a notice that records their hashes).
 * Heading levels are the same everywhere: a layer file has one `#` title, modules are `##` with `###` sections, and a broken-out file has no `#` and starts at the module's `##`. No tool changes a level when it moves or combines text. Details in `README.md`.
