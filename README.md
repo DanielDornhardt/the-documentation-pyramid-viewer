@@ -29,8 +29,10 @@ No dependencies to install, no build step. One vendored library file (markdown-i
 
 ## Quick start
 
-> [!NOTE] Adaptation
-> You can and should adapt this to your own codebase!
+> [!NOTE]
+> **Adaptation:** You can and should adapt this to your own codebase!
+> Use this repo as an example and template. Point your agent here and use this as a starting point...
+> You should DEFINITELY adapt this and integrate this to YOUR style and YOUR project. Enjoy!
 
 You need Node 20.11 or newer.
 
