@@ -1,0 +1,963 @@
+/* Base stylesheet of the pyramid viewer.
+   All structure and behaviour styling. It holds no colour, no font name, no radius and no brick geometry:
+   every look value is a custom property (--pv-*) that a theme file (light.css or metal.css) and an optional
+   user tokens file define. The only tokens defined here are the motion tokens, which are not part of a look.
+   Only opacity and transform are animated. No JavaScript, no image files, no web fonts. */
+
+:root {
+  --pv-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --pv-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --pv-dur-hover: 150ms;
+  --pv-dur-dialog-in: 180ms;
+  --pv-dur-pulse: 3s;
+  --pv-dur-dialog-out: 140ms;
+  --pv-dur-enter: 200ms;
+  --pv-dur-leave: 160ms;
+  --pv-dur-move: 300ms;
+  --pv-stagger: 20ms;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--pv-bg);
+  color: var(--pv-text);
+  font-family: var(--pv-font);
+  font-size: var(--pv-font-size);
+  line-height: var(--pv-line-height);
+}
+
+a {
+  color: var(--pv-link);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  color: var(--pv-link-hover);
+  text-decoration-thickness: 0.12em;
+}
+
+/* Focus ring: a solid ring in the focus colour, two pixels away from the element. */
+a:focus-visible,
+summary:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--pv-focus);
+  outline-offset: 2px;
+}
+
+/* The dialog clips what lies outside its body, so the ring of the body is drawn inside it. */
+.pv-dialog-body:focus-visible {
+  outline: 3px solid var(--pv-paper-link);
+  outline-offset: -3px;
+}
+
+/* On paper the ring takes the paper link colour, which is dark enough on every paper. */
+.content-paper :focus-visible,
+.pv-dialog-body :focus-visible {
+  outline-color: var(--pv-paper-link);
+}
+
+.skip-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -4rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--pv-bg);
+  color: var(--pv-link);
+  border: 2px solid var(--pv-border);
+  border-radius: var(--pv-radius);
+  z-index: 10;
+}
+
+.skip-link:focus {
+  top: 0.5rem;
+}
+
+/* Site header: one slim row, no bar. The site name at the left, the view link and the skin switch at the right.
+   The padding lines the row up with the page column below. */
+
+.site-header {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 0.5rem;
+  padding-inline: max(var(--pv-page-pad), calc((100% - var(--pv-page-max)) / 2 + var(--pv-page-pad)));
+  border-bottom: var(--pv-header-rule);
+}
+
+.site-nav {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.site-nav a {
+  text-decoration: none;
+}
+
+.site-nav a:hover {
+  text-decoration: underline;
+}
+
+.site-name {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--pv-muted);
+}
+
+.view-switch {
+  /* Stays on the right when the site name is left out (overview pages), so the header does not jump between pages. */
+  margin-left: auto;
+  font-size: 0.8125rem;
+  color: var(--pv-muted);
+}
+
+.skin-switch {
+  display: flex;
+  flex: none;
+  gap: 0.25rem 1rem;
+  font-size: 0.8125rem;
+}
+
+.skin-switch a {
+  color: var(--pv-muted);
+  text-decoration: none;
+}
+
+.skin-switch a:hover {
+  text-decoration: underline;
+}
+
+.skin-switch a[aria-current="true"] {
+  color: var(--pv-text-strong);
+  font-weight: 600;
+}
+
+/* Page layout */
+
+.layout {
+  display: block;
+  max-width: var(--pv-page-max);
+  margin: 0 auto;
+  padding: 1.5rem var(--pv-page-pad) 3rem;
+}
+
+.content {
+  min-width: 0;
+}
+
+/* The reading surface: a document page and the right pane of the tree view are a paper card. */
+.content-paper,
+.pv-dialog-body {
+  background: var(--pv-paper);
+  color: var(--pv-paper-text);
+  border: 1px solid var(--pv-paper-rule);
+  border-radius: var(--pv-radius);
+}
+
+/* In the dialog the skin may let the article sit directly on the dialog surface (token --pv-dialog-body-bg). */
+.pv-dialog-body {
+  background: var(--pv-dialog-body-bg, var(--pv-paper));
+  border-color: var(--pv-dialog-body-border, var(--pv-paper-rule));
+}
+
+.content-paper {
+  padding: 1.5rem 1.25rem 2rem;
+}
+
+.content-paper a,
+.pv-dialog-body a {
+  color: var(--pv-paper-link);
+}
+
+.doc > :first-child {
+  margin-top: 0;
+}
+
+/* Article typography. An article always sits on paper, so it reads the paper tokens. */
+
+:is(.content-paper, .pv-dialog-body) h1,
+:is(.content-paper, .pv-dialog-body) h2,
+:is(.content-paper, .pv-dialog-body) h3,
+:is(.content-paper, .pv-dialog-body) h4 {
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+:is(.content-paper, .pv-dialog-body) h1 {
+  margin: 0 0 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--pv-paper-rule);
+  font-size: var(--pv-h1-size);
+  font-weight: 700;
+}
+
+:is(.content-paper, .pv-dialog-body) h2 {
+  margin: 2rem 0 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--pv-paper-rule);
+  font-size: 1.5rem;
+  font-weight: 650;
+}
+
+:is(.content-paper, .pv-dialog-body) h3 {
+  margin: 1.5rem 0 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 650;
+}
+
+:is(.content-paper, .pv-dialog-body) h4 {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+:is(.content-paper, .pv-dialog-body) p,
+:is(.content-paper, .pv-dialog-body) li,
+:is(.content-paper, .pv-dialog-body) blockquote {
+  max-width: var(--pv-measure);
+}
+
+:is(.content-paper, .pv-dialog-body) pre,
+:is(.content-paper, .pv-dialog-body) code {
+  font-family: var(--pv-mono);
+  font-size: 0.875em;
+}
+
+:is(.content-paper, .pv-dialog-body) code {
+  background: var(--pv-code-bg);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+:is(.content-paper, .pv-dialog-body) pre {
+  background: var(--pv-pre-bg);
+  color: var(--pv-pre-text);
+  padding: 0.9rem 1.1rem;
+  overflow-x: auto;
+  border-radius: var(--pv-radius);
+  line-height: 1.55;
+}
+
+:is(.content-paper, .pv-dialog-body) :not(pre) > code {
+  overflow-wrap: anywhere;
+}
+
+:is(.content-paper, .pv-dialog-body) pre code {
+  background: none;
+  padding: 0;
+  font-size: 1em;
+}
+
+:is(.content-paper, .pv-dialog-body) blockquote {
+  margin-left: 0;
+  padding-left: 1rem;
+  border-left: 4px solid var(--pv-paper-rule);
+  color: var(--pv-paper-muted);
+}
+
+:is(.content-paper, .pv-dialog-body) table {
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+:is(.content-paper, .pv-dialog-body) th,
+:is(.content-paper, .pv-dialog-body) td {
+  border: 1px solid var(--pv-paper-rule);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+:is(.content-paper, .pv-dialog-body) th {
+  background: var(--pv-code-bg);
+}
+
+:is(.content-paper, .pv-dialog-body) tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--pv-code-bg) 45%, transparent);
+}
+
+:is(.content-paper, .pv-dialog-body) hr {
+  border: 0;
+  border-top: 1px solid var(--pv-paper-rule);
+}
+
+.notice,
+.empty {
+  background: var(--pv-surface);
+  color: var(--pv-surface-text);
+  border: 1px solid var(--pv-border-soft);
+  border-radius: var(--pv-radius);
+  padding: 0.75rem 1rem;
+}
+
+/* Left navigation: the dialog index, the tree index and the page index of a document page share one look. */
+
+.toc-label,
+.tree .layer-label {
+  margin: 0 0 0.5rem;
+  font-size: var(--pv-nav-label-size);
+  font-weight: 600;
+  letter-spacing: var(--pv-nav-label-tracking);
+  text-transform: uppercase;
+  color: var(--pv-muted);
+}
+
+.page-toc {
+  background: var(--pv-surface);
+  color: var(--pv-surface-text);
+  border: 1px solid var(--pv-border-soft);
+  border-radius: var(--pv-radius);
+  padding: 0.75rem 1rem;
+  margin: 0 0 1.5rem;
+}
+
+.page-toc ul,
+.pv-dialog-toc ul,
+.tree ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.page-toc li,
+.pv-dialog-toc li,
+.tree li {
+  max-width: none;
+}
+
+.page-toc a,
+.pv-dialog-toc a,
+.tree a {
+  display: block;
+  padding: 0.2rem 0.5rem;
+  border-left: 2px solid transparent;
+  font-size: var(--pv-nav-size);
+  line-height: 1.4;
+  color: var(--pv-nav-link);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.page-toc a:hover,
+.pv-dialog-toc a:hover,
+.tree a:hover {
+  color: var(--pv-nav-link-active);
+}
+
+.page-toc .toc-level-3 a,
+.pv-dialog-toc .toc-level-3 a,
+.tree-subheadings a {
+  padding-left: 1.25rem;
+  color: var(--pv-nav-link-sub);
+}
+
+.pv-dialog-toc a[aria-current],
+.tree a[aria-current] {
+  color: var(--pv-nav-link-active);
+  border-left-color: var(--pv-nav-active-bar);
+  font-weight: 600;
+}
+
+/* Overview */
+
+.doc h1.pyramid-title {
+  margin: 1rem 0 0.5rem;
+  padding: 0;
+  border: 0;
+  text-align: center;
+  font-size: var(--pv-title-size);
+  font-weight: var(--pv-title-weight);
+  line-height: 1.15;
+  color: var(--pv-text-strong);
+}
+
+.intro {
+  max-width: var(--pv-intro-width);
+  margin: 0 auto 2rem;
+  text-align: center;
+  font-size: var(--pv-intro-size);
+  line-height: 1.5;
+  color: var(--pv-intro-color);
+}
+
+/* The h2 before the picture names the region for screen readers and is not drawn. */
+.pyramid-heading {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.pyramid {
+  position: relative;
+}
+
+.layer,
+.decisions {
+  margin: 0 0 var(--pv-layer-gap);
+}
+
+/* The label is a pill in one theme and a spaced eyebrow in the other; the tokens decide. */
+.layer-label {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 0.4rem;
+  padding: var(--pv-pill-pad);
+  border-radius: var(--pv-pill-radius);
+  background: var(--pv-label-bg);
+  color: var(--pv-pill-text);
+  font-size: var(--pv-pill-size);
+  font-weight: 700;
+  letter-spacing: var(--pv-pill-tracking);
+  line-height: 1.5;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.layer-description {
+  max-width: none;
+  margin: 0 0 0.75rem;
+  text-align: center;
+  color: var(--pv-muted);
+  font-size: 0.8125rem;
+}
+
+/* Compact density (--density compact): the overview takes less height, so more of the pyramid is in view. The title
+   keeps its size; the space around it, the intro and the layer headings shrinks. The header row stays in the normal
+   flow above the title, so the menu links never overlap it. */
+body[data-density="compact"] .layout:has(> main.content:not(.content-paper)) {
+  padding-top: 0.25rem;
+}
+
+body[data-density="compact"] .doc h1.pyramid-title {
+  margin: 0 0 0.25rem;
+}
+
+body[data-density="compact"] .intro {
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+body[data-density="compact"] .layer .layer-label,
+body[data-density="compact"] .decisions .layer-label {
+  margin-bottom: 0.15rem;
+}
+
+body[data-density="compact"] .layer .layer-description,
+body[data-density="compact"] .decisions .layer-description {
+  margin-bottom: 0.5rem;
+}
+
+/* The layer index picks the tint; the bricks of that layer read it through these properties. */
+.layer[data-tint="0"] { --pv-brick-bg: var(--pv-tint-0); --pv-brick-text: var(--pv-tint-0-text); --pv-brick-border: var(--pv-tint-0-border); --pv-brick-hover: var(--pv-tint-0-hover); --pv-label-bg: var(--pv-tint-0-pill); }
+.layer[data-tint="1"] { --pv-brick-bg: var(--pv-tint-1); --pv-brick-text: var(--pv-tint-1-text); --pv-brick-border: var(--pv-tint-1-border); --pv-brick-hover: var(--pv-tint-1-hover); --pv-label-bg: var(--pv-tint-1-pill); }
+.layer[data-tint="2"] { --pv-brick-bg: var(--pv-tint-2); --pv-brick-text: var(--pv-tint-2-text); --pv-brick-border: var(--pv-tint-2-border); --pv-brick-hover: var(--pv-tint-2-hover); --pv-label-bg: var(--pv-tint-2-pill); }
+.layer[data-tint="3"] { --pv-brick-bg: var(--pv-tint-3); --pv-brick-text: var(--pv-tint-3-text); --pv-brick-border: var(--pv-tint-3-border); --pv-brick-hover: var(--pv-tint-3-hover); --pv-label-bg: var(--pv-tint-3-pill); }
+.layer[data-tint="4"] { --pv-brick-bg: var(--pv-tint-4); --pv-brick-text: var(--pv-tint-4-text); --pv-brick-border: var(--pv-tint-4-border); --pv-brick-hover: var(--pv-tint-4-hover); --pv-label-bg: var(--pv-tint-4-pill); }
+.layer[data-tint="5"] { --pv-brick-bg: var(--pv-tint-5); --pv-brick-text: var(--pv-tint-5-text); --pv-brick-border: var(--pv-tint-5-border); --pv-brick-hover: var(--pv-tint-5-hover); --pv-label-bg: var(--pv-tint-5-pill); }
+/* The decision records use the fifth look (tint 4). */
+.decisions { --pv-brick-bg: var(--pv-tint-4); --pv-brick-text: var(--pv-tint-4-text); --pv-brick-border: var(--pv-tint-4-border); --pv-brick-hover: var(--pv-tint-4-hover); --pv-label-bg: var(--pv-tint-4-pill); }
+
+.rows,
+.row-bricks,
+.decision-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pv-row-gap);
+}
+
+.row-bricks,
+.decision-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--pv-row-gap);
+}
+
+.row {
+  max-width: none;
+}
+
+.brick {
+  display: flex;
+  flex: 0 1 auto;
+  min-width: var(--pv-brick-min);
+  max-width: var(--pv-brick-max);
+}
+
+.decision {
+  display: flex;
+  flex: 0 1 auto;
+  min-width: var(--pv-brick-min);
+  max-width: calc(var(--pv-brick-max) + 3rem);
+}
+
+.brick a,
+.decision a {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  padding: var(--pv-brick-pad);
+  background: var(--pv-brick-bg);
+  color: var(--pv-brick-text);
+  border: var(--pv-brick-border-width) solid var(--pv-brick-border);
+  border-radius: var(--pv-brick-radius);
+  box-shadow: var(--pv-brick-shadow);
+  font-size: var(--pv-brick-size);
+  font-weight: var(--pv-brick-weight);
+  line-height: 1.35;
+  text-align: center;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: transform var(--pv-dur-hover) var(--pv-ease-out);
+}
+
+/* A brick that opens a whole document of its own (a broken-out file) has a dashed border; section bricks stay solid. */
+.brick.brick-doc a {
+  border-style: dashed;
+}
+
+/* Two pre-painted layers behind the text: the hover colour and the hover shadow. Only their opacity changes. */
+.brick a::before,
+.decision a::before,
+.brick a::after,
+.decision a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--pv-dur-hover) var(--pv-ease-out);
+}
+
+.brick a::before,
+.decision a::before {
+  z-index: -1;
+  background: var(--pv-brick-hover);
+}
+
+.brick a::after,
+.decision a::after {
+  box-shadow: var(--pv-brick-shadow-hover);
+}
+
+.brick a:hover::before,
+.decision a:hover::before,
+.brick a:focus-visible::before,
+.decision a:focus-visible::before,
+.brick a:hover::after,
+.decision a:hover::after,
+.brick a:focus-visible::after,
+.decision a:focus-visible::after {
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .brick a:hover,
+  .decision a:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.brick a:active,
+.decision a:active {
+  transform: scale(0.97);
+}
+
+.pyramid-note {
+  max-width: none;
+  margin: 0.75rem 0 0;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--pv-muted);
+}
+
+.pyramid-note-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+.pyramid-note-list li {
+  max-width: none;
+}
+
+/* Element that a live update keeps for a moment while it leaves. */
+.pv-ghost {
+  position: absolute;
+  pointer-events: none;
+  margin: 0;
+}
+
+@media (max-width: 30rem) {
+  .brick,
+  .decision {
+    min-width: 0;
+  }
+}
+
+/* Tree view: a sticky index on the left on wide screens, a toggle on narrow screens. */
+
+.tree {
+  margin-bottom: 1rem;
+}
+
+.tree-toggle {
+  background: var(--pv-surface);
+  color: var(--pv-surface-text);
+  border: 1px solid var(--pv-border-soft);
+  border-radius: var(--pv-radius);
+}
+
+.tree-toggle > summary {
+  cursor: pointer;
+  padding: 0.7rem 0.9rem;
+  font-weight: 600;
+}
+
+.tree .tree-layers {
+  padding: 0 0.75rem 0.9rem;
+}
+
+.tree .layer-label {
+  display: block;
+  width: auto;
+  margin: 1rem 0 0.35rem;
+  padding: 0 0.5rem;
+  border-radius: 0;
+  background: none;
+  text-align: left;
+  line-height: 1.4;
+  color: var(--pv-muted);
+  font-size: var(--pv-nav-label-size);
+  font-weight: 600;
+  letter-spacing: var(--pv-nav-label-tracking);
+}
+
+.tree .tree-file > a {
+  font-weight: 600;
+}
+
+.tree-headings,
+.tree-subheadings {
+  margin-left: 0.5rem;
+}
+
+@media (min-width: 52rem) {
+  .view-tree .layout {
+    display: grid;
+    grid-template-columns: var(--pv-tree-width) minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .view-tree .tree {
+    position: sticky;
+    top: 0.75rem;
+    max-height: calc(100vh - 1.5rem);
+    overflow-y: auto;
+    margin-bottom: 0;
+    border-radius: var(--pv-radius);
+  }
+
+  /* Where the browser supports styling the closed part of details, show the index at all times and drop the
+     toggle. Elsewhere the toggle stays and still works. */
+  @supports selector(::details-content) {
+    .tree-toggle::details-content {
+      content-visibility: visible;
+      display: block;
+    }
+
+    .tree-toggle > summary {
+      display: none;
+    }
+  }
+}
+
+/* Dialog: a document opened from a brick. Header, then the index on the left and the article on the right. */
+
+body:has(.pv-dialog[open]) {
+  overflow: hidden;
+}
+
+.pv-dialog {
+  isolation: isolate;
+  width: var(--pv-dialog-width);
+  height: var(--pv-dialog-height);
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  background: var(--pv-dialog-bg);
+  background: color-mix(in srgb, var(--pv-dialog-frame, var(--pv-dialog-bg)) var(--pv-dialog-accent-mix), var(--pv-dialog-bg));
+  color: var(--pv-dialog-text);
+  border: var(--pv-dialog-border-width) solid var(--pv-dialog-frame, var(--pv-border-soft));
+  border-radius: var(--pv-dialog-radius);
+  box-shadow: 0 0 var(--pv-dialog-glow-blur) rgba(var(--pv-dialog-glow, 0, 0, 0), var(--pv-dialog-glow-alpha)), var(--pv-dialog-shadow);
+}
+
+/* The tint of the layer that the clicked brick belongs to. */
+.pv-dialog[data-tint="0"] { --pv-dialog-accent: var(--pv-tint-0-pill); --pv-dialog-glow: var(--pv-tint-0-glow); --pv-dialog-frame: rgb(var(--pv-tint-0-glow)); --pv-dialog-rule: rgba(var(--pv-tint-0-glow), 0.2); }
+.pv-dialog[data-tint="1"] { --pv-dialog-accent: var(--pv-tint-1-pill); --pv-dialog-glow: var(--pv-tint-1-glow); --pv-dialog-frame: rgb(var(--pv-tint-1-glow)); --pv-dialog-rule: rgba(var(--pv-tint-1-glow), 0.2); }
+.pv-dialog[data-tint="2"] { --pv-dialog-accent: var(--pv-tint-2-pill); --pv-dialog-glow: var(--pv-tint-2-glow); --pv-dialog-frame: rgb(var(--pv-tint-2-glow)); --pv-dialog-rule: rgba(var(--pv-tint-2-glow), 0.2); }
+.pv-dialog[data-tint="3"] { --pv-dialog-accent: var(--pv-tint-3-pill); --pv-dialog-glow: var(--pv-tint-3-glow); --pv-dialog-frame: rgb(var(--pv-tint-3-glow)); --pv-dialog-rule: rgba(var(--pv-tint-3-glow), 0.2); }
+.pv-dialog[data-tint="4"] { --pv-dialog-accent: var(--pv-tint-4-pill); --pv-dialog-glow: var(--pv-tint-4-glow); --pv-dialog-frame: rgb(var(--pv-tint-4-glow)); --pv-dialog-rule: rgba(var(--pv-tint-4-glow), 0.2); }
+.pv-dialog[data-tint="5"] { --pv-dialog-accent: var(--pv-tint-5-pill); --pv-dialog-glow: var(--pv-tint-5-glow); --pv-dialog-frame: rgb(var(--pv-tint-5-glow)); --pv-dialog-rule: rgba(var(--pv-tint-5-glow), 0.2); }
+
+.pv-dialog[open] {
+  display: flex;
+  flex-direction: column;
+  animation: pv-dialog-in var(--pv-dur-dialog-in) var(--pv-dialog-ease) both;
+}
+
+.pv-dialog[open][data-closing] {
+  animation: pv-dialog-out var(--pv-dur-dialog-out) var(--pv-ease-out) both;
+}
+
+.pv-dialog::backdrop {
+  /* The haze takes the colour of the layer that is open: from a light touch of it at the top to the dark at the bottom.
+     It breathes slowly once it has faded in, by its opacity only. */
+  background: linear-gradient(
+    rgba(var(--pv-dialog-glow, var(--pv-backdrop-rgb)), var(--pv-backdrop-glow)),
+    rgba(var(--pv-backdrop-rgb), var(--pv-backdrop-dim))
+  );
+  backdrop-filter: blur(var(--pv-backdrop-blur));
+  animation:
+    pv-backdrop-in var(--pv-dur-dialog-in) var(--pv-dialog-ease) both,
+    pv-backdrop-pulse var(--pv-dur-pulse) ease-in-out var(--pv-dur-dialog-in) infinite;
+}
+
+.pv-dialog[data-closing]::backdrop {
+  animation: pv-backdrop-out var(--pv-dur-dialog-out) var(--pv-ease-out) both;
+}
+
+@keyframes pv-dialog-in {
+  from {
+    opacity: 0;
+    transform: scale(var(--pv-dialog-from-scale)) translate(calc(var(--pv-from-x, 0px) * var(--pv-dialog-pull)), calc(var(--pv-from-y, 0px) * var(--pv-dialog-pull) + var(--pv-dialog-rise)));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pv-dialog-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes pv-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pv-backdrop-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: var(--pv-backdrop-pulse);
+  }
+}
+
+@keyframes pv-backdrop-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.pv-dialog-header {
+  position: relative;
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  background: var(--pv-dialog-header-bg);
+  background: color-mix(in srgb, var(--pv-dialog-frame, var(--pv-dialog-header-bg)) var(--pv-dialog-header-mix), var(--pv-dialog-header-bg));
+  color: var(--pv-dialog-text);
+  border-bottom: 1px solid var(--pv-dialog-rule, var(--pv-border-soft));
+}
+
+.pv-dialog-title {
+  flex: 1 1 10rem;
+  max-width: none;
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.pv-dialog-button {
+  min-height: 2.25rem;
+  padding: 0.3rem 1rem;
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--pv-button-text);
+  background: var(--pv-button-bg);
+  border: 1px solid var(--pv-border-soft);
+  border-radius: var(--pv-button-radius);
+  cursor: pointer;
+}
+
+/* The close button may be a small icon: the text stays for assistive technology, only its size changes. */
+#pv-dialog-close {
+  min-width: var(--pv-close-min-width, auto);
+  padding: var(--pv-close-pad, 0.3rem 1rem);
+  font-size: var(--pv-close-label-size, 0.875rem);
+}
+
+#pv-dialog-close::before {
+  content: "\00d7";
+  content: "\00d7" / "";
+  font-size: var(--pv-close-icon-size, 0);
+  line-height: 1;
+}
+
+.pv-dialog-button:hover {
+  background: var(--pv-button-hover-bg);
+}
+
+.pv-dialog-button[hidden] {
+  display: none;
+}
+
+.pv-dialog-main {
+  display: flex;
+  flex: 1 1 auto;
+  gap: 1.5rem;
+  min-height: 0;
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+.pv-dialog-toc {
+  /* The column clips its overflow, so the focus ring of a link needs room inside it; the margin gives that room back. */
+  flex: 0 0 calc(var(--pv-toc-width) + 12px);
+  align-self: stretch;
+  margin: -6px;
+  padding: 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color: var(--pv-dialog-text);
+}
+
+.pv-dialog-toc[hidden] {
+  display: none;
+}
+
+.pv-dialog-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 1.5rem 2rem 2rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 47.5rem) {
+  .pv-dialog-toc {
+    display: none;
+  }
+
+  .pv-dialog-body {
+    padding: 24px 20px;
+  }
+
+  .pv-dialog-main {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 40rem) {
+  .pv-dialog {
+    width: calc(100% - 2 * var(--pv-dialog-inset, 0.75rem));
+    height: calc(100% - 2 * var(--pv-dialog-inset, 0.75rem));
+    max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pv-dialog,
+  .pv-dialog::backdrop {
+    animation: none !important;
+  }
+
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  .skip-link,
+  .site-header,
+  .pv-dialog,
+  .tree {
+    display: none;
+  }
+
+  body {
+    background: Canvas;
+    color: CanvasText;
+  }
+
+  .content-paper {
+    border: 0;
+    padding: 0;
+  }
+
+  a {
+    color: inherit;
+  }
+}

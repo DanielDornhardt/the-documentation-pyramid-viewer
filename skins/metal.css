@@ -1,0 +1,365 @@
+/* Metal theme of the pyramid viewer.
+   Dark brushed metal: grain from a procedural SVG data URI, a static light, bevelled plates.
+   Tokens first, then the decorations. No JavaScript, no image files, no web fonts. Only opacity and
+   transform are animated. Colour tokens written as six-digit hex are checked by tests/skin-metal.test.js. */
+
+:root {
+  /* Colour core */
+  --pv-bg: #07080a;
+  --pv-text: #e9edf2;
+  --pv-text-strong: #e9edf2;
+  --pv-muted: #98a2ae;
+  --pv-link: #86dcfb;
+  --pv-link-hover: #ffffff;
+  --pv-surface: #15171b;
+  --pv-surface-text: #e9edf2;
+  --pv-border: #6b7480;
+  --pv-border-soft: #2a2f36;
+  --pv-focus: #00adef;
+  --pv-accent: #00adef;
+  --pv-backdrop-rgb: 7, 8, 10;
+  --pv-backdrop-glow: 0.72;
+  --pv-backdrop-dim: 0.72;
+  --pv-backdrop-blur: 0;
+  --pv-backdrop-pulse: 1;
+
+  /* Paper: the reading surface */
+  --pv-paper: #f3f4f1;
+  --pv-paper-text: #1d2126;
+  --pv-paper-muted: #4a525a;
+  --pv-paper-link: #1d4a9e;
+  --pv-paper-rule: #dcdfe4;
+  --pv-code-bg: #e5e8ec;
+  --pv-pre-bg: #1a3f86;
+  --pv-pre-text: #dce8ff;
+
+  /* Bricks: five distinct tints, the sixth repeats the second. Text is the same on all of them. */
+  --pv-tint-0: #1b3a7a;
+  --pv-tint-0-text: #e9edf2;
+  --pv-tint-0-border: rgba(0, 0, 0, 0.92);
+  --pv-tint-0-hover: #1b3a7a;
+  --pv-tint-0-pill: transparent;
+  --pv-tint-0-glow: 7, 8, 10;
+  --pv-tint-1: #232a5c;
+  --pv-tint-1-text: #e9edf2;
+  --pv-tint-1-border: rgba(0, 0, 0, 0.92);
+  --pv-tint-1-hover: #232a5c;
+  --pv-tint-1-pill: transparent;
+  --pv-tint-1-glow: 7, 8, 10;
+  --pv-tint-2: #1b1e24;
+  --pv-tint-2-text: #e9edf2;
+  --pv-tint-2-border: rgba(0, 0, 0, 0.92);
+  --pv-tint-2-hover: #1b1e24;
+  --pv-tint-2-pill: transparent;
+  --pv-tint-2-glow: 7, 8, 10;
+  --pv-tint-3: #15171b;
+  --pv-tint-3-text: #e9edf2;
+  --pv-tint-3-border: rgba(0, 0, 0, 0.92);
+  --pv-tint-3-hover: #15171b;
+  --pv-tint-3-pill: transparent;
+  --pv-tint-3-glow: 7, 8, 10;
+  --pv-tint-4: #2a2d33;
+  --pv-tint-4-text: #e9edf2;
+  --pv-tint-4-border: rgba(0, 0, 0, 0.92);
+  --pv-tint-4-hover: #2a2d33;
+  --pv-tint-4-pill: transparent;
+  --pv-tint-4-glow: 7, 8, 10;
+  --pv-tint-5: #232a5c;
+  --pv-tint-5-text: #e9edf2;
+  --pv-tint-5-border: rgba(0, 0, 0, 0.92);
+  --pv-tint-5-hover: #232a5c;
+  --pv-tint-5-pill: transparent;
+  --pv-tint-5-glow: 7, 8, 10;
+  --pv-pill-text: #b0b9c3;
+  --pv-pill-pad: 0;
+  --pv-pill-radius: 0;
+  --pv-pill-tracking: 0.18em;
+  --pv-pill-size: 0.8125rem;
+  --pv-brick-radius: 10px;
+  --pv-brick-pad: 13px 16px;
+  --pv-brick-min: 130px;
+  --pv-brick-max: 220px;
+  --pv-brick-size: 0.8125rem;
+  --pv-brick-weight: 500;
+  --pv-brick-border-width: 0;
+  --pv-brick-shadow: none;
+  --pv-brick-shadow-hover: none;
+  --pv-row-gap: 10px;
+  --pv-layer-gap: 30px;
+
+  /* Dialog and header */
+  --pv-dialog-bg: #15171b;
+  --pv-dialog-text: #c4ccd4;
+  --pv-dialog-header-bg: #15171b;
+  --pv-dialog-border-width: 0;
+  --pv-dialog-accent-mix: 0%;
+  --pv-dialog-header-mix: 0%;
+  --pv-dialog-glow-blur: 0px;
+  --pv-dialog-glow-alpha: 0;
+  --pv-dialog-from-scale: 0.96;
+  --pv-dialog-rise: 0px;
+  --pv-dialog-pull: 1;
+  --pv-dialog-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --pv-dialog-radius: 14px;
+  --pv-dialog-shadow: 0 12px 28px rgba(0, 0, 0, 0.55);
+  --pv-dialog-width: min(95vw, 72rem);
+  --pv-dialog-height: 86vh;
+  --pv-toc-width: 13rem;
+  --pv-button-bg: #1d4a9e;
+  --pv-button-text: #d6f6ff;
+  --pv-button-hover-bg: #1d4a9e;
+  --pv-button-radius: 9px;
+  --pv-header-rule: none;
+  --pv-dialog-body-bg: var(--pv-paper);
+  --pv-dialog-body-border: var(--pv-paper-rule);
+  --pv-dialog-inset: 0.5rem;
+  --pv-close-label-size: 0.875rem;
+  --pv-close-icon-size: 0;
+  --pv-close-min-width: auto;
+  --pv-close-pad: 0.3rem 1rem;
+
+  /* Type and page geometry */
+  --pv-font: "IBM Plex Sans", Roboto, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --pv-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --pv-font-size: 1rem;
+  --pv-line-height: 1.65;
+  --pv-h1-size: 2rem;
+  --pv-title-size: clamp(2.25rem, 4.6vw, 4rem);
+  --pv-title-weight: 700;
+  --pv-intro-size: clamp(1.0625rem, 1.6vw, 1.3rem);
+  --pv-intro-width: 30rem;
+  --pv-intro-color: #c4ccd4;
+  --pv-measure: 76ch;
+  --pv-page-max: 75rem;
+  --pv-page-pad: clamp(1.25rem, 3vw, 2.5rem);
+  --pv-radius: 8px;
+
+  /* Tree view and navigation */
+  --pv-nav-label-size: 0.8125rem;
+  --pv-nav-label-tracking: 0.18em;
+  --pv-nav-link: #c4ccd4;
+  --pv-nav-link-sub: #98a2ae;
+  --pv-nav-link-active: #ffffff;
+  --pv-nav-active-bar: #00adef;
+  --pv-nav-size: 0.875rem;
+  --pv-tree-width: 18rem;
+
+  /* Metal-only tokens, used only in this file */
+  --pv-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.0012 0.85' numOctaves='4' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='1.5 0 0 0 -0.25 1.5 0 0 0 -0.25 1.5 0 0 0 -0.25 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  --pv-grain-strength: 0.9;
+  --pv-grain-strength-frame: 0.5;
+  --pv-light-strength: 0.4;
+  --pv-light-x: 35%;
+  --pv-light-y: 15%;
+  --pv-glow: 0.9;
+  --pv-plate: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0, rgba(255, 255, 255, 0.02) 40%, rgba(0, 0, 0, 0.22) 100%);
+  --pv-bevel: inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 2px 0 rgba(255, 255, 255, 0.05), inset 1px 0 0 rgba(255, 255, 255, 0.1), inset -1px 0 0 rgba(0, 0, 0, 0.4), inset 0 -1px 0 rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(0, 0, 0, 0.92);
+}
+
+/* Page room: a static light and brushed grain behind everything. Painted once, never animated, never fixed. */
+
+body {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+body::before {
+  background-image: var(--pv-grain);
+  background-size: 700px 700px;
+  opacity: calc(var(--pv-grain-strength) * 0.11);
+}
+
+body::after {
+  background: radial-gradient(ellipse 380px 620px at var(--pv-light-x) var(--pv-light-y), rgba(255, 255, 255, calc(var(--pv-light-strength) * 0.26)), transparent 72%);
+}
+
+/* Plates: bricks, the dialog frame and the tree page. Gradient over the tint, grain above it, bevel around it. */
+
+.brick a,
+.decision a {
+  background-image: var(--pv-plate);
+  box-shadow: var(--pv-bevel), 0 6px 14px rgba(0, 0, 0, 0.45);
+}
+
+/* Grain on a brick, then a sheen that fades in on hover and focus. The base hover colour layer is replaced. */
+.brick a::before,
+.decision a::before,
+.brick a:hover::before,
+.decision a:hover::before,
+.brick a:focus-visible::before,
+.decision a:focus-visible::before {
+  z-index: -1;
+  background: var(--pv-grain);
+  background-size: 700px 700px;
+  mix-blend-mode: overlay;
+  opacity: calc(var(--pv-grain-strength) * 0.42);
+}
+
+.brick a::after,
+.decision a::after {
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: none;
+}
+
+.brick a {
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.55);
+}
+
+.pv-dialog,
+.view-tree .layout {
+  isolation: isolate;
+  background-image: var(--pv-plate);
+  box-shadow: var(--pv-bevel), 0 12px 28px rgba(0, 0, 0, 0.55);
+}
+
+.view-tree .layout {
+  position: relative;
+}
+
+.pv-dialog::before,
+.view-tree .layout::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--pv-grain);
+  background-size: 700px 700px;
+  border-radius: inherit;
+  mix-blend-mode: overlay;
+  opacity: calc(var(--pv-grain-strength-frame) * 0.42);
+  pointer-events: none;
+}
+
+.view-tree .layout {
+  margin-top: 1rem;
+  padding: 1.25rem;
+  border-radius: var(--pv-dialog-radius);
+  background-color: var(--pv-surface);
+  max-width: calc(var(--pv-page-max) + 2.5rem);
+}
+
+@media (max-width: 51.99rem) {
+  .view-tree .layout {
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+  }
+}
+
+/* The reading frames are paper with a thin dark rim. */
+.content-paper,
+.pv-dialog-body {
+  border: 0;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.92), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.view-tree .tree-toggle {
+  border-color: transparent;
+  background: transparent;
+}
+
+/* Groove under the dialog header: a dark line over a light line. The page header has no bar, so it has no groove. */
+.pv-dialog-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.95) 0 1px, rgba(255, 255, 255, 0.2) 1px 2px);
+  pointer-events: none;
+}
+
+.pv-dialog-header {
+  border-bottom: 0;
+  background-image: var(--pv-plate);
+}
+
+.pv-dialog-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--pv-grain);
+  background-size: 700px 700px;
+  mix-blend-mode: overlay;
+  opacity: calc(var(--pv-grain-strength-frame) * 0.6);
+  pointer-events: none;
+}
+
+/* Anodized buttons. */
+.pv-dialog-button {
+  border: 0;
+  text-shadow: 0 0 1px rgba(220, 248, 255, 0.9), 0 0 calc(var(--pv-glow) * 10px) rgba(0, 173, 239, 0.75), 0 -1px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -2px 0 rgba(0, 0, 20, 0.45), 0 0 0 1px rgba(0, 0, 10, 0.95), 0 8px 16px rgba(0, 0, 0, 0.55);
+}
+
+.pv-dialog-button:active {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 20, 0.6), 0 0 0 1px rgba(0, 0, 10, 0.95);
+}
+
+/* Headline lettering in brushed steel. Where the user forces colours, plain text takes over. */
+.doc h1.pyramid-title {
+  color: transparent;
+  /* The same recipe as the site lettering: a soft grain blended over a static highlight over the steel horizon. */
+  background-image:
+    var(--pv-grain),
+    linear-gradient(100deg, transparent 18%, rgba(255, 255, 255, 0.5) 36%, transparent 56%),
+    linear-gradient(180deg, #f1f4f7 0%, #b5bdc5 38%, #6c7580 52%, #aeb6be 72%, #d7dde2 100%);
+  background-size: 700px 700px, auto, 100% 100%;
+  background-blend-mode: soft-light, screen, normal;
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.9)) drop-shadow(0 1px 0 rgba(255, 255, 255, 0.12)) drop-shadow(0 6px 10px rgba(0, 0, 0, 0.45));
+}
+
+@media (forced-colors: active) {
+  .doc h1.pyramid-title {
+    color: CanvasText;
+    background: none;
+    filter: none;
+  }
+
+  .brick a,
+  .decision a,
+  .pv-dialog-button {
+    border: 1px solid CanvasText;
+  }
+}
+
+@media print {
+  body::before,
+  body::after,
+  .view-tree .layout::before {
+    display: none;
+  }
+
+  .doc h1.pyramid-title {
+    color: CanvasText;
+    background: none;
+    filter: none;
+  }
+
+  .view-tree .layout {
+    background: Canvas;
+    box-shadow: none;
+  }
+}
+
+/* Compact density: slimmer bricks and gaps, a one-line intro. */
+body[data-density="compact"] {
+  --pv-brick-pad: 12px 16px;
+  --pv-row-gap: 9px;
+  --pv-layer-gap: 24px;
+  --pv-intro-size: 1rem;
+  --pv-intro-width: 40rem;
+}

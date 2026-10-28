@@ -1,0 +1,2 @@
+# The CRLF fixture must keep its line endings, tests rely on them.
+tests/fixtures/pyramid/L3-modules/crlf.md -text

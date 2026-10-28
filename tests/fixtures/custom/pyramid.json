@@ -1,0 +1,8 @@
+{
+  "layers": [
+    { "id": "vision", "label": "Vision", "path": "vision", "kind": "folder", "bricks": "file" },
+    { "id": "guides", "label": "Guides", "path": "guides", "kind": "folder" },
+    { "id": "gone", "label": "Missing", "path": "gone", "kind": "folder" },
+    { "id": "start", "label": "Start here", "path": "start.md", "kind": "file" }
+  ]
+}

@@ -1,0 +1,151 @@
+/* Light theme of the pyramid viewer.
+   Elegant, flat and slim: design tokens only, no rules. The structure lives in pv-base.css.
+   Colour tokens written as six-digit hex are checked for contrast by tests/skin-light.test.js. */
+
+:root {
+  /* Colour core */
+  --pv-bg: #f9fafb;
+  --pv-text: #1f2937;
+  --pv-text-strong: #101828;
+  --pv-muted: #4a5565;
+  --pv-link: #1d4a9e;
+  --pv-link-hover: #12307a;
+  --pv-surface: #f3f4f6;
+  --pv-surface-text: #1f2937;
+  --pv-border: #6b7280;
+  --pv-border-soft: #e5e7eb;
+  --pv-focus: #155dfc;
+  --pv-accent: #00adef;
+  --pv-backdrop-rgb: 15, 23, 42;
+  --pv-backdrop-glow: 0.08;
+  --pv-backdrop-dim: 0.35;
+  --pv-backdrop-blur: 4px;
+  --pv-backdrop-pulse: 0.8;
+
+  /* Paper: the reading surface */
+  --pv-paper: #ffffff;
+  --pv-paper-text: #1f2937;
+  --pv-paper-muted: #4a5565;
+  --pv-paper-link: #1d4a9e;
+  --pv-paper-rule: #e5e7eb;
+  --pv-code-bg: #f3f4f6;
+  --pv-pre-bg: #1f2937;
+  --pv-pre-text: #e5e7eb;
+
+  /* Bricks and layer labels, one set per tint (layers take the tint index modulo 6) */
+  --pv-tint-0: #fffbeb;
+  --pv-tint-0-text: #7b3306;
+  --pv-tint-0-border: #ffd230;
+  --pv-tint-0-hover: #fef3c6;
+  --pv-tint-0-pill: #b45309;
+  --pv-tint-0-glow: 217, 119, 6;
+  --pv-tint-1: #eff6ff;
+  --pv-tint-1-text: #1c398e;
+  --pv-tint-1-border: #8ec5ff;
+  --pv-tint-1-hover: #dbeafe;
+  --pv-tint-1-pill: #155dfc;
+  --pv-tint-1-glow: 37, 99, 235;
+  --pv-tint-2: #ecfdf5;
+  --pv-tint-2-text: #004f3b;
+  --pv-tint-2-border: #5ee9b5;
+  --pv-tint-2-hover: #d0fae5;
+  --pv-tint-2-pill: #047857;
+  --pv-tint-2-glow: 5, 150, 105;
+  --pv-tint-3: #faf5ff;
+  --pv-tint-3-text: #59168b;
+  --pv-tint-3-border: #dab2ff;
+  --pv-tint-3-hover: #f3e8ff;
+  --pv-tint-3-pill: #9810fa;
+  --pv-tint-3-glow: 147, 51, 234;
+  --pv-tint-4: #f9fafb;
+  --pv-tint-4-text: #1e2939;
+  --pv-tint-4-border: #d1d5dc;
+  --pv-tint-4-hover: #f3f4f6;
+  --pv-tint-4-pill: #4a5565;
+  --pv-tint-4-glow: 107, 114, 128;
+  --pv-tint-5: #fff7ed;
+  --pv-tint-5-text: #7e2a0c;
+  --pv-tint-5-border: #ffb86a;
+  --pv-tint-5-hover: #ffedd4;
+  --pv-tint-5-pill: #c10007;
+  --pv-tint-5-glow: 234, 88, 12;
+  --pv-pill-text: #ffffff;
+  --pv-pill-pad: 2px 12px;
+  --pv-pill-radius: 9999px;
+  --pv-pill-tracking: 0.05em;
+  --pv-pill-size: 0.75rem;
+  --pv-brick-radius: 6px;
+  --pv-brick-pad: 8px 12px;
+  --pv-brick-min: 120px;
+  --pv-brick-max: 200px;
+  --pv-brick-size: 0.75rem;
+  --pv-brick-weight: 500;
+  --pv-brick-border-width: 1px;
+  --pv-brick-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --pv-brick-shadow-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --pv-row-gap: 8px;
+  --pv-layer-gap: 32px;
+
+  /* Dialog and header */
+  --pv-dialog-bg: #ffffff;
+  --pv-dialog-text: #4a5565;
+  --pv-dialog-header-bg: #f9fafb;
+  --pv-dialog-border-width: 2px;
+  --pv-dialog-accent-mix: 8%;
+  --pv-dialog-header-mix: 5%;
+  --pv-dialog-glow-blur: 20px;
+  --pv-dialog-glow-alpha: 0.1;
+  --pv-dialog-from-scale: 0.92;
+  --pv-dialog-rise: 12px;
+  --pv-dialog-pull: 0;
+  --pv-dialog-ease: ease-out;
+  --pv-dur-dialog-in: 250ms;
+  --pv-dialog-radius: 12px;
+  --pv-dialog-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  --pv-dialog-width: min(95vw, 68rem);
+  --pv-dialog-height: 85vh;
+  --pv-toc-width: 12rem;
+  --pv-button-bg: #f3f4f6;
+  --pv-button-text: #1f2937;
+  --pv-button-hover-bg: #e5e7eb;
+  --pv-button-radius: 6px;
+  --pv-header-rule: none;
+  --pv-dialog-body-bg: transparent;
+  --pv-dialog-body-border: transparent;
+  --pv-dialog-inset: 0.75rem;
+  --pv-close-label-size: 0;
+  --pv-close-icon-size: 1.375rem;
+  --pv-close-min-width: 2.25rem;
+  --pv-close-pad: 0.3rem 0.5rem;
+
+  /* Type and page geometry */
+  --pv-font: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --pv-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --pv-font-size: 1rem;
+  --pv-line-height: 1.7;
+  --pv-h1-size: 2rem;
+  --pv-title-size: 1.875rem;
+  --pv-title-weight: 700;
+  --pv-intro-size: 0.9375rem;
+  --pv-intro-width: 40rem;
+  --pv-intro-color: #4a5565;
+  --pv-measure: 76ch;
+  --pv-page-max: 72rem;
+  --pv-page-pad: 1rem;
+  --pv-radius: 8px;
+
+  /* Tree view and navigation */
+  --pv-nav-label-size: 0.75rem;
+  --pv-nav-label-tracking: 0.025em;
+  --pv-nav-link: #4a5565;
+  --pv-nav-link-sub: #4a5565;
+  --pv-nav-link-active: #1447e6;
+  --pv-nav-active-bar: #155dfc;
+  --pv-nav-size: 0.75rem;
+  --pv-tree-width: 18rem;
+}
+
+/* Compact density: a smaller gap between layers. */
+body[data-density="compact"] {
+  --pv-layer-gap: 24px;
+}
