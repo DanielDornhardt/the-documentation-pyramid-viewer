@@ -36,7 +36,8 @@ test('no absolute local path appears in any file', async () => {
 });
 
 test('no emoji appears in any file', async () => {
-  const emoji = /\p{Extended_Pictographic}/u;
+  // The copyright and trademark signs count as pictographic in Unicode, but they are text (the font licence has one).
+  const emoji = /(?![\u00a9\u00ae\u2122])\p{Extended_Pictographic}/u;
   const offenders = [];
   for (const file of await trackedLikeFiles()) {
     const r = rel(file);

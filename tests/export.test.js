@@ -120,7 +120,7 @@ test('--tokens: the file is copied to skins/custom.css and linked last on every 
   for (const file of (await listFiles(out)).filter((f) => f.endsWith('.html'))) {
     const html = await readFile(join(out, file), 'utf8');
     const up = '../'.repeat(file.split('/').length - 1);
-    assert.ok(html.includes(`<link rel="stylesheet" href="${up}skins/pv-base.css">\n<link rel="stylesheet" href="${up}skins/metal.css">\n<link rel="stylesheet" href="${up}skins/custom.css">\n`), file);
+    assert.ok(html.includes(`<link rel="stylesheet" href="${up}skins/pv-base.css">\n<link rel="stylesheet" href="${up}skins/metal.css">\n<link rel="stylesheet" href="${up}skins/metal-fonts.css">\n<link rel="stylesheet" href="${up}skins/custom.css">\n`), file);
   }
 });
 

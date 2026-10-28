@@ -9,6 +9,7 @@ import { join, dirname, resolve, sep, posix } from 'node:path';
 import { loadPyramid, readDocumentText, createLinkReport } from '../viewer.js';
 import { renderOverviewPage, renderDocumentPage, renderDocumentFragment } from './pages.js';
 import { DIALOG_SCRIPT_FILE, DIALOG_SCRIPT_URL } from './server.js';
+import { fontCss, fontsStylesheet } from './fonts.js';
 import { SKIN_DIR, SKIN_FILES, SKIN_HELP, DEFAULT_SKIN, DENSITIES, DEFAULT_DENSITY, TOKENS_EXPORT_FILE, resolveSkin, readTokensFile } from './skins.js';
 import { writeFileSafely } from './safe-write.js';
 
@@ -225,7 +226,7 @@ export async function exportHtml(options) {
       doc: (v, docPath, fragment) => `${rel(docFile(v, docPath))}${fragment ? `#${encodeURIComponent(fragment)}` : ''}`,
       skin,
       density,
-      styles: () => [rel(`skins/${SKIN_FILES[0]}`), rel(`skins/${skin}.css`), ...(tokensCss === null ? [] : [rel(TOKENS_EXPORT_FILE)])],
+      styles: () => [rel(`skins/${SKIN_FILES[0]}`), rel(`skins/${skin}.css`), ...(fontsStylesheet(skin) ? [rel(`skins/${fontsStylesheet(skin)}`)] : []), ...(tokensCss === null ? [] : [rel(TOKENS_EXPORT_FILE)])],
       // Only the pyramid overview uses the script; the tree view never asks for it.
       script: () => rel(DIALOG_SCRIPT_URL)
     };
@@ -284,6 +285,12 @@ export async function exportHtml(options) {
   for (const name of (await readdir(SKIN_DIR)).filter((n) => /\.css$/.test(n)).sort()) {
     await writeFileSafely(join(outAbs, 'skins', name), await readFile(join(SKIN_DIR, name), 'utf8'));
     written.push(`skins/${name}`);
+  }
+  // The fonts of the chosen skin, embedded in one stylesheet (a page opened from file:// may not load a font file from
+  // another folder, and an embedded font needs no server).
+  if (fontsStylesheet(skin)) {
+    await writeFileSafely(join(outAbs, 'skins', fontsStylesheet(skin)), await fontCss(skin, { inline: true }));
+    written.push(`skins/${fontsStylesheet(skin)}`);
   }
   if (tokensCss !== null) {
     await writeFileSafely(join(outAbs, ...TOKENS_EXPORT_FILE.split('/')), tokensCss);

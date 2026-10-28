@@ -10,6 +10,7 @@ import { join, relative, resolve, isAbsolute } from 'node:path';
 import { loadPyramid, readDocumentText, resolveRequestPath, LayerConfigError } from '../viewer.js';
 import { renderOverviewPage, renderDocumentPage, renderDocumentFragment } from './pages.js';
 import { NO_LAYERS_MESSAGE, notOnPyramidLine, folderIndexLines } from './export.js';
+import { FONT_FILES, FONT_URL_DIR, fontCss, fontsStylesheet, readFontFile } from './fonts.js';
 import { SKINS, SKIN_FILES, SKIN_HELP, DEFAULT_SKIN, DENSITIES, DEFAULT_DENSITY, SKIN_DIR, TOKENS_ROUTE, resolveSkin, readTokensFile, skinFromCookie, skinCookieHeader } from './skins.js';
 import { createWatcher, createLiveHub, EVENTS_ROUTE, LIVE_SCRIPT_URL } from './watch.js';
 
@@ -26,7 +27,7 @@ const CONTENT_PREFIX = '/_content';
 const SECURITY_HEADERS = {
   // No inline script. The only script is the dialog script from this server (script-src 'self'), which loads
   // document fragments from this server (connect-src 'self'). It is linked only from the pyramid overview.
-  'Content-Security-Policy': "default-src 'none'; script-src 'self'; connect-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+  'Content-Security-Policy': "default-src 'none'; script-src 'self'; connect-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
   'X-Content-Type-Options': 'nosniff',
   'Referrer-Policy': 'no-referrer',
   'Cache-Control': 'no-store'
@@ -110,7 +111,7 @@ function serverLinks(skinName, explicitSkin, { withTokens = false, live = false,
     doc: (view, docPath, fragment, extra = {}) => docUrl(view, docPath, fragment, extra),
     skin: skinName,
     density,
-    styles: () => [`/skins/${SKIN_FILES[0]}`, `/skins/${skinName}.css`, ...(withTokens ? [TOKENS_ROUTE] : [])],
+    styles: () => [`/skins/${SKIN_FILES[0]}`, `/skins/${skinName}.css`, ...(fontsStylesheet(skinName) ? [`/skins/${fontsStylesheet(skinName)}`] : []), ...(withTokens ? [TOKENS_ROUTE] : [])],
     script: () => `/${DIALOG_SCRIPT_URL}`,
     contentBase: () => CONTENT_PREFIX,
     /** Switcher entries for the page being built: the same page in every skin (the tree view keeps its open section). */
@@ -143,7 +144,21 @@ async function handleLiveScript(res) {
   }
 }
 
+/** The font files of the metal skin, only those that the viewer ships (a fixed list of names). */
+async function handleFontFile(res, rawPath) {
+  const name = rawPath.slice(`/${FONT_URL_DIR}/`.length);
+  if (!FONT_FILES.has(name)) return notFound(res);
+  try {
+    send(res, 200, 'font/woff2', await readFontFile(name), { 'Cache-Control': 'public, max-age=3600' });
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+    sendText(res, 404, `The font file "${name}" is missing in this copy of the viewer (vendor/fonts/).`);
+  }
+}
+
 async function handleSkinFile(res, rawPath, config) {
+  const generated = SKINS.find((skin) => rawPath === `/skins/${fontsStylesheet(skin)}`);
+  if (generated) return send(res, 200, 'text/css; charset=utf-8', await fontCss(generated, { inline: false }));
   const match = /^\/skins\/([a-z0-9-]+\.css)$/.exec(rawPath);
   if (!match || !SKIN_FILES.includes(match[1])) return notFound(res);
   try {
@@ -179,6 +194,7 @@ async function handleRequest(req, res, config) {
   const params = new URLSearchParams(queryAt === -1 ? '' : target.slice(queryAt + 1, hashAt > queryAt ? hashAt : undefined));
 
   if (rawPath.startsWith('/skins/')) return handleSkinFile(res, rawPath, config);
+  if (rawPath.startsWith(`/${FONT_URL_DIR}/`)) return handleFontFile(res, rawPath);
   if (rawPath === TOKENS_ROUTE && config.tokensFile) return handleTokensFile(res, config);
   if (rawPath === `/${DIALOG_SCRIPT_URL}`) return handleScriptFile(res);
   if (rawPath === EVENTS_ROUTE || rawPath === `/${LIVE_SCRIPT_URL}`) {

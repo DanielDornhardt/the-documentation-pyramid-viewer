@@ -138,7 +138,7 @@ Serve mode listens on 127.0.0.1, answers only GET and HEAD, rejects requests who
 
 * **Automated:** over 600 tests (`node --test tests/*.test.js`) on Node 20.11.1, 24.12.0 and 26.3.0, covering layer discovery, headings and slugs, link rewriting, serve mode (including path traversal), both exports, skins, accessibility structure, the watcher, and text contrast computed from the tokens. Test fixtures contain invented text only. Node 22 was not run and is not claimed.
 * **By hand, in headless Chromium on one macOS machine:** the overview, dialog, tree view, watch-mode animations and the skin switcher, in both skins, served and exported. The exporters were also run on a dozen real documentation pyramids.
-* **Not checked:** Firefox, Safari, Windows, screen readers, keyboard-only use beyond the focus styles, and the look with the intended fonts (the review browser had none of them).
+* **Not checked:** Firefox, Safari, Windows, screen readers, keyboard-only use beyond the focus styles, and the look on other platforms' font rendering (the metal fonts are bundled; the light skin uses system fonts).
 
 ## Known limits
 
@@ -147,7 +147,7 @@ Serve mode listens on 127.0.0.1, answers only GET and HEAD, rejects requests who
 * **The dialog needs JavaScript** and a browser with `dialog.showModal`; without it the bricks open the document pages. The tree view has no dialog. The export embeds every document in `index.html` so that the dialog works from `file://`, which makes that file large for big pyramids.
 * **Phone layout:** below about 30rem the bricks wrap two per line, so the triangle shape is a desktop shape.
 * **Tree index:** the wide-screen index relies on `::details-content` (recent Chromium); elsewhere it stays behind its toggle.
-* **Metal skin:** the light on the lettering and bricks is static, and it does not match the grain of any other site pixel for pixel. Fonts are named in the stacks but not bundled.
+* **Metal skin:** the light on the lettering and bricks is static, and it does not match the grain of any other site pixel for pixel. The light skin names Geist first and falls back to your system fonts; it bundles no fonts.
 
 ## Development
 
@@ -159,6 +159,6 @@ Run the tests with `node --test tests/*.test.js` (list the files: a plain `node 
 
 ## Licence and credits
 
-MIT, see [LICENSE](LICENSE). The vendored markdown-it keeps its own licence in `vendor/NOTICE.md`.
+MIT, see [LICENSE](LICENSE). The vendored markdown-it keeps its own licence in `vendor/NOTICE.md`. The metal skin bundles IBM Plex Sans and IBM Plex Mono (official, unmodified files, SIL Open Font License 1.1, see `vendor/fonts/`); the HTML export embeds them, so the metal look does not depend on installed fonts.
 
 If you use the viewer or the [documentation pyramid](https://github.com/DanielDornhardt/the-documentation-pyramid) in your own project, your own docs, an article or your own shopfront material, please link back to the original repository. This is a request, not a condition of the licence. A line like this is plenty: "Built with the Documentation Pyramid (https://github.com/DanielDornhardt/the-documentation-pyramid)".

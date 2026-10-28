@@ -404,7 +404,8 @@ test('?skin=metal switches only the stylesheet link and keeps the skin while bro
   assert.match(metal, /href="\/skins\/pv-base\.css"/);
   assert.match(metal, /href="\/skins\/metal\.css"/);
   const noSwitch = (html) => html.replace(/<nav class="skin-switch"[\s\S]*?<\/nav>\n/, '');
-  assert.equal(noSwitch(metal).replace('/skins/metal.css', '/skins/light.css').replace('data-skin="metal"', 'data-skin="light"').replace(/\?skin=metal/g, ''), noSwitch(light));
+  assert.match(metal, /href="\/skins\/metal-fonts\.css"/);
+  assert.equal(noSwitch(metal).replace('<link rel="stylesheet" href="/skins/metal-fonts.css">\n', '').replace('/skins/metal.css', '/skins/light.css').replace('data-skin="metal"', 'data-skin="light"').replace(/\?skin=metal/g, ''), noSwitch(light));
   assert.match((await get('/?skin=metal')).body, /href="\/L1-vision\.md\?skin=metal"/);
 });
 
@@ -504,7 +505,7 @@ test('--tokens: the route serves the file read fresh on every request, the page 
   const withTokens = await startServer({ root: fixture('pyramid'), port: 0, skin: 'metal', tokensFile: tokens, log: { info() {}, warn() {} } });
   try {
     const page = await rawRequest(withTokens.port, '/');
-    assert.match(page.body, /<link rel="stylesheet" href="\/skins\/pv-base\.css">\n<link rel="stylesheet" href="\/skins\/metal\.css">\n<link rel="stylesheet" href="\/_pv\/tokens\.css">\n/);
+    assert.match(page.body, /<link rel="stylesheet" href="\/skins\/pv-base\.css">\n<link rel="stylesheet" href="\/skins\/metal\.css">\n<link rel="stylesheet" href="\/skins\/metal-fonts\.css">\n<link rel="stylesheet" href="\/_pv\/tokens\.css">\n/);
     let res = await rawRequest(withTokens.port, '/_pv/tokens.css');
     assert.equal(res.status, 200);
     assert.match(res.headers['content-type'], /^text\/css; charset=utf-8/);

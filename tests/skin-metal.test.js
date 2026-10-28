@@ -68,7 +68,7 @@ async function page(path, skin) {
 function normalise(html) {
   return html
     .replace(/<nav class="skin-switch"[\s\S]*?<\/nav>\n/, '')
-    .replace(/<link rel="stylesheet" href="\/skins\/(light|metal)\.css">/, '<link rel="stylesheet" href="THEME">')
+    .replace(/<link rel="stylesheet" href="\/skins\/(light|metal)\.css">\n(<link rel="stylesheet" href="\/skins\/metal-fonts\.css">\n)?/, '<link rel="stylesheet" href="THEME">\n')
     .replace(/data-skin="(light|metal)"/, 'data-skin="SKIN"')
     .replace(/(\?|&amp;|&)skin=(light|plain|metal)/g, '');
 }
