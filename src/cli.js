@@ -12,7 +12,7 @@ import { exportMarkdown } from './markdown-export.js';
 
 const USAGE = `Usage:
   node viewer.js serve <docs> [--port N] [--host H] [--allow-host NAME] [--skin light|metal] [--density comfortable|compact] [--tokens file.css] [--watch] [--depth 2|3] [--layers file]
-  node viewer.js export <docs> <out> [--view pyramid|tree|both] [--skin light|metal] [--density comfortable|compact] [--tokens file.css] [--depth 2|3] [--layers file]
+  node viewer.js export <docs> <out> [--view pyramid|tree|both] [--skin light|metal | --skins light,metal] [--density comfortable|compact] [--tokens file.css] [--depth 2|3] [--layers file]
   node viewer.js markdown <docs> <file> [--decisions] [--toc] [--anchors html|headings] [--force] [--layers file]
   node viewer.js --help
 
@@ -24,6 +24,7 @@ Commands:
 Options:
   --view     Views to export: pyramid, tree or both (default both).
   --skin     Look: light (default) or metal. "plain" is accepted as another name for light.
+  --skins    Export: several skins, one folder per skin with a skin switcher in every page, and an index.html that opens the first.
   --density  Height of the overview page: comfortable (default) or compact (less vertical space, more of the pyramid in view).
   --tokens   CSS file with your own design tokens (:root { --pv-...: value }), linked after the skin.
   --watch    Serve only: watch the docs and update open pages by themselves (opt-in).
@@ -61,6 +62,7 @@ const COMMANDS = {
     positionals: ['docs', 'out'],
     options: {
       view: { type: 'string' },
+      skins: { type: 'string' },
       skin: { type: 'string' },
       density: { type: 'string' },
       tokens: { type: 'string' },
@@ -92,6 +94,15 @@ function readSkin(value) {
   const skin = resolveSkin(value);
   if (!skin) throw new UsageError(`Unknown value "${value}" for --skin. Valid values: ${SKIN_HELP}.`);
   return skin;
+}
+
+function readSkins(value, single) {
+  if (value === undefined) return undefined;
+  if (single !== undefined) throw new UsageError('Use either --skin or --skins, not both.');
+  const names = value.split(',').map((v) => v.trim()).filter(Boolean);
+  if (names.length === 0) throw new UsageError('--skins needs at least one skin, for example --skins light,metal.');
+  for (const name of names) readSkin(name);
+  return names;
 }
 
 function parseCommand(parseArgs, name, argv) {
@@ -197,6 +208,7 @@ export async function main(argv, streams = {}) {
         out: args.out,
         view: oneOf('view', args.view, EXPORT_VIEWS),
         skin: readSkin(args.skin),
+        skins: readSkins(args.skins, args.skin),
         density: oneOf('density', args.density, DENSITIES),
         tokensFile: args.tokens,
         depth: readDepth(args.depth),

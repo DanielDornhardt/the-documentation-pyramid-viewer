@@ -132,6 +132,8 @@ export function formatLinkReport(report) {
  * @property {string} out Output folder; created when missing, files of the same name are replaced, nothing is deleted.
  * @property {'pyramid'|'tree'|'both'} [view] Default "both".
  * @property {'light'|'metal'|'plain'} [skin] Default "light"; plain is another name for light.
+ * @property {string[]} [skins] Several skins: one full export per skin in `<out>/<skin>/`, a skin switcher in every page that
+ *   links to the same page in the other skins, and an `<out>/index.html` that opens the first skin. Replaces `skin`.
  * @property {string} [tokensFile] CSS file of user design tokens; copied to skins/custom.css and linked last.
  * @property {2|3} [depth] Deepest heading level in the tree index. Default 3.
  * @property {import('../viewer.js').LayerConfig[]} [layers]
@@ -148,6 +150,7 @@ export function formatLinkReport(report) {
  */
 export async function exportHtml(options) {
   const log = options.log || { info: (m) => process.stdout.write(`${m}\n`), warn: (m) => process.stderr.write(`${m}\n`) };
+  if (options.skins !== undefined) return exportSkins(options, log);
   const view = options.view || 'both';
   const skin = options.skin === undefined ? DEFAULT_SKIN : resolveSkin(options.skin);
   const depth = options.depth === undefined ? 3 : options.depth;
@@ -208,10 +211,16 @@ export async function exportHtml(options) {
   }
 
   /** URL mapper for the page stored at pageFile (a path relative to the output folder). */
+  const switchSkins = options.switchSkins || [];
   const linksFor = (pageFile) => {
     const from = posix.dirname(pageFile);
     const rel = (target) => encodePath(posix.relative(from, target));
     return {
+      // With several skins each skin sits in its own folder (`<out>/<skin>/`) with the same page names, so the switcher
+      // links to the same page one folder over.
+      ...(switchSkins.length > 1
+        ? { skinSwitch: () => switchSkins.map((name) => ({ name, current: name === skin, href: encodePath(posix.relative(posix.join('/', skin, from), posix.join('/', name, pageFile))) })) }
+        : {}),
       overview: (v) => rel(overviewFile(v)),
       doc: (v, docPath, fragment) => `${rel(docFile(v, docPath))}${fragment ? `#${encodeURIComponent(fragment)}` : ''}`,
       skin,
@@ -253,13 +262,13 @@ export async function exportHtml(options) {
     pages.set(
       overviewFile(v),
       first
-        ? renderDocumentPage({ ...common, path: first.path, source: sources.get(first.path), links: linksFor(overviewFile(v)) })
-        : renderOverviewPage({ ...common, links: linksFor(overviewFile(v)), embedded })
+        ? renderDocumentPage({ ...common, path: first.path, source: sources.get(first.path), links: linksFor(overviewFile(v)), skinPage: { view: v, docPath: null } })
+        : renderOverviewPage({ ...common, links: linksFor(overviewFile(v)), embedded, skinPage: { view: v, docPath: null } })
     );
     for (const doc of docs) {
       const file = docFile(v, doc.path);
       // Only the first view counts links, so that "both" does not count every link twice.
-      pages.set(file, renderDocumentPage({ ...common, path: doc.path, source: sources.get(doc.path), links: linksFor(file), report: v === views[0] ? report : undefined }));
+      pages.set(file, renderDocumentPage({ ...common, path: doc.path, source: sources.get(doc.path), links: linksFor(file), skinPage: { view: v, docPath: doc.path }, report: v === views[0] ? report : undefined }));
     }
   }
 
@@ -295,4 +304,41 @@ export async function exportHtml(options) {
   for (const line of folderIndexLines(pyramid)) log.info(line);
   for (const line of text.warnings) log.warn(line);
   return { empty: false, files: written, report };
+}
+
+/**
+ * Several skins in one export: a full export per skin in its own folder, linked by a skin switcher, and a plain
+ * `index.html` at the top that opens the first skin (no script).
+ */
+async function exportSkins(options, log) {
+  const names = [];
+  for (const value of options.skins) {
+    const skin = resolveSkin(value);
+    if (!skin) throw new Error(`Unknown skin "${value}". Valid values: ${SKIN_HELP}`);
+    if (!names.includes(skin)) names.push(skin);
+  }
+  if (names.length === 0) throw new Error('No skin given.');
+  const files = [];
+  let report = null;
+  for (const skin of names) {
+    const part = await exportHtml({ ...options, skins: undefined, skin, switchSkins: names, out: join(options.out, skin), log });
+    if (part.empty) return part;
+    files.push(...part.files.map((file) => `${skin}/${file}`));
+    report ||= part.report;
+  }
+  const entry = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Documentation pyramid</title>
+<meta http-equiv="refresh" content="0; url=${names[0]}/index.html">
+</head>
+<body>
+<p><a href="${names[0]}/index.html">Open the documentation pyramid</a></p>
+</body>
+</html>
+`;
+  await writeFileSafely(join(resolve(options.out), 'index.html'), entry);
+  files.push('index.html');
+  return { empty: false, files, report };
 }
