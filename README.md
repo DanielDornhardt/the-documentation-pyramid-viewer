@@ -4,6 +4,8 @@ A small viewer for documentation pyramids: layered markdown docs (vision, archit
 
 Made for the [documentation pyramid](https://github.com/DanielDornhardt/the-documentation-pyramid), the layered docs format for humans and coding agents. Start there if you want to know what a pyramid is and how to set one up for your project.
 
+**Live demos:** see it on two real code bases, with a skin switcher: [NetHack](https://dornhardt.com/pyramid/nethack/) and [Lua](https://dornhardt.com/pyramid/lua/). The documentation pyramids behind them are in the [`samples/`](https://github.com/DanielDornhardt/the-documentation-pyramid/tree/main/samples) folder of the pyramid repository.
+
 No dependencies to install, no build step. One vendored library file (markdown-it) is the only third-party code.
 
 ![A pyramid growing in the viewer while docs are written: watch mode, metal skin](docs/screenshots/pyramid-grows.gif)
